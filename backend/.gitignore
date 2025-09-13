@@ -1,0 +1,7 @@
+backup.js
+node_modules
+.env
+.DS_Store
+.vscode
+dist
+README.MD

@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Asimovian&family=Caesar+Dressing&family=Delius&family=Nabla&family=Wallpoet&family=Workbench&display=swap");
+
+@import "tailwindcss";
+
+body {
+  background-color: black;
+  color: white;
+}
+.home {
+  font-family: "Caesar Dressing", cursive !important;
+}
+
+.Asimovian {
+  font-family: Asimovian;
+}
+
+.Wallpoet {
+  font-family: Wallpoet;
+}
+
+.Nabla {
+  font-family: Nabla;
+}
+
+.Workbench {
+  font-family: Workbench;
+}
+
+.Delius {
+  font-family: Delius;
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.marquee {
+  display: inline-block;
+  padding-right: 2rem; /* space between repeats */
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+}
+
+body {
+  -ms-overflow-style: none;
+}
+
+.center {
+  height: -webkit-fill-available;
+}
