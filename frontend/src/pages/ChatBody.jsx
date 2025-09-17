@@ -2,10 +2,9 @@ import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Navbar from "../componets/Navbar";
 import ParticlesBackground from "../componets/ParticlesBackground";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Body = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   useEffect(() => {

@@ -26,7 +26,7 @@ const UserName = () => {
       );
       console.log(user.data.userName);
       dispatch(setUser({ userName: user.data.userName }));
-      navigate("/");
+      navigate(-1);
     } catch (err) {
       console.log("Error in saving username", err);
       alert("Error in saving username");
@@ -35,7 +35,7 @@ const UserName = () => {
   };
   useEffect(() => {
     if (user.userName) {
-      navigate("/");
+      navigate(-2);
     }
   });
 

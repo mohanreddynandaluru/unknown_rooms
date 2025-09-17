@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 import { loadSlim } from "@tsparticles/slim";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
-import iconMap from "../utils/roomsData.jsx"; // mapping FaGlobe → component
+import iconMap from "../utils/roomsData.jsx";
 
 const Home = () => {
   const [init, setInit] = useState(false);
@@ -57,7 +57,7 @@ const Home = () => {
       {/* Rooms grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-9/12 mx-auto">
         {rooms.map((room) => {
-          const Icon = iconMap[room.icon] || iconMap["FaGlobe"]; // fallback icon
+          const Icon = iconMap[room.icon] || iconMap["FaGlobe"];
           return (
             <div
               key={room._id}
@@ -73,7 +73,7 @@ const Home = () => {
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
               {/* Content */}
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col h-full justify-between">
                 <div className="flex items-center gap-3 mb-2">
                   <h2 className="text-2xl font-semibold text-white Asimovian">
                     {room.title}

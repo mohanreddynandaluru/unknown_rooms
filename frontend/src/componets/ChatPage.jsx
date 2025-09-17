@@ -2,9 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import iconMap from "../utils/roomsData.jsx";
 
 const ChatPage = () => {
-  const userName = useSelector((state) => state.user.userName); // ✅ string directly
+  const userName = useSelector((state) => state.user.userName);
+  const { id } = useParams();
+  const [roomDetails, setRoomDetails] = useState({});
+
+  console.log("Room ID:", id);
   const [messages, setMessages] = useState([
     {
       userName: "System",
@@ -55,19 +63,30 @@ const ChatPage = () => {
     setInput("");
   };
 
-  // 🔹 Auto-scroll to bottom on new messages
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const res = await axios.get(BASE_URL + `/rooms/${id}`);
+        setRoomDetails(res.data);
+        console.log("Room details:", res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchDetails();
+  }, [id]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // 🔹 Handle Enter key
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
   };
-
+  const Icon = iconMap[roomDetails?.icon] || iconMap["FaGlobe"];
   return (
     <div className="relative min-h-screen flex flex-col">
       {/* Chat Header */}
@@ -76,7 +95,10 @@ const ChatPage = () => {
           <Link to="/">
             <BiArrowBack className="text-3xl text-white mr-4 cursor-pointer" />
           </Link>
-          <h2 className="text-2xl font-bold text-white">🌐 General Chat</h2>
+          <h2 className="text-2xl font-bold text-white">
+            <Icon className="text-3xl text-blue-400 inline" />{" "}
+            {roomDetails.title}
+          </h2>
         </div>
         <h3 className="text-sm text-white">Online: 13</h3>
       </div>
