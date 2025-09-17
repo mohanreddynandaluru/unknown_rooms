@@ -4,7 +4,7 @@ import Navbar from "../componets/Navbar";
 import ParticlesBackground from "../componets/ParticlesBackground";
 import { useSelector } from "react-redux";
 
-const Body = () => {
+const ChatBody = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   useEffect(() => {
@@ -26,4 +26,4 @@ const Body = () => {
   );
 };
 
-export default Body;
+export default ChatBody;

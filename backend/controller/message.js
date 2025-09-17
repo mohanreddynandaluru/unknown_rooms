@@ -27,12 +27,26 @@ const getMessages = async (req, res) => {
     });
 
     const messages = await Message.find(query)
-      .sort({ createdAt: -1 }) // newest first
+      .sort({ createdAt: -1 })
       .limit(Number(limit))
-      .populate("user", "userName -_id")
+      .populate("user", "userName")
       .lean();
 
-    res.json(messages.reverse());
+    const defaultAvatar =
+      "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3";
+
+    const updatedMessages = messages.map((message) => {
+      const isCurrentUser = message.user._id?.toString() === req.user.id;
+      return {
+        userName: isCurrentUser ? "You" : message.user.userName,
+        avatar: defaultAvatar,
+        text: message.message,
+        type: isCurrentUser ? "user" : "other",
+        ...(isCurrentUser && { status: "sent" }),
+      };
+    });
+
+    res.json(updatedMessages.reverse());
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch messages" });
@@ -57,7 +71,22 @@ const createMessage = async (req, res) => {
       message,
     });
     await newMessage.save();
-    res.status(201).json({ message: "Message sent successfully", newMessage });
+
+    const defaultAvatar =
+      "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3";
+
+    const formattedMessage = {
+      userName: "You",
+      avatar: defaultAvatar,
+      text: message,
+      type: "user",
+      status: "sending",
+    };
+
+    res.status(201).json({
+      message: "Message sent successfully",
+      newMessage: formattedMessage,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to send message" });

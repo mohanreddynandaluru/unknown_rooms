@@ -26,7 +26,7 @@ const UserName = () => {
       );
       console.log(user.data.userName);
       dispatch(setUser({ userName: user.data.userName }));
-      navigate(-1);
+      navigate("/");
     } catch (err) {
       console.log("Error in saving username", err);
       alert("Error in saving username");

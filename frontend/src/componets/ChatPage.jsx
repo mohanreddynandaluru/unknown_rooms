@@ -6,79 +6,117 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import iconMap from "../utils/roomsData.jsx";
+import socket from "../utils/socketIO.js";
 
 const ChatPage = () => {
   const userName = useSelector((state) => state.user.userName);
   const { id } = useParams();
   const [roomDetails, setRoomDetails] = useState({});
 
-  console.log("Room ID:", id);
-  const [messages, setMessages] = useState([
-    {
-      userName: "System",
-      text: "Welcome to the chat room 🎉",
-      type: "system",
-    },
-    {
-      avatar:
-        "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-      text: "catWelcome to the chat room...",
-      userName: "cat",
-      type: "other",
-    },
-    {
-      avatar:
-        "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-      userName: "dog",
-      text: "Hi there!",
-      type: "other",
-    },
-    {
-      userName: "You",
-      avatar:
-        "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
-      text: "Hey! how are you cat",
-      type: "user",
-      status: "sending",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   const sendMessage = () => {
     if (input.trim() === "") return;
-    console.log(userName);
+    console.log(input);
+
+    try {
+      axios.post(
+        BASE_URL + `/message/${roomDetails._id}`,
+        { message: input },
+        { withCredentials: true }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
     setMessages((prev) => [
       ...prev,
       {
         userName: userName.userName ?? "Anonymous",
         text: input,
         type: "user",
-        status: "sending",
+        status: "sent",
         avatar:
           "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
       },
     ]);
+
+    socket.emit("sendMessage", {
+      roomId: roomDetails.roomId,
+      userName: userName.userName,
+      message: input,
+    });
+
     setInput("");
   };
-
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const res = await axios.get(BASE_URL + `/rooms/${id}`);
+        const res = await axios.get(`${BASE_URL}/rooms/${id}`);
         setRoomDetails(res.data);
         console.log("Room details:", res.data);
       } catch (err) {
-        console.log(err);
+        console.error("Error fetching room details:", err);
       }
     };
-    fetchDetails();
+
+    if (id) {
+      fetchDetails();
+    }
   }, [id]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const currDate = new Date().toISOString();
+        let messagesFromDB = await axios.get(
+          `${BASE_URL}/message/${roomDetails._id}?limit=20&before=${currDate}`,
+          { withCredentials: true }
+        );
+        console.log("Messages:", messagesFromDB.data);
+        setMessages(messagesFromDB.data);
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+      }
+    };
+
+    if (roomDetails?._id) {
+      getMessages();
+    }
+  }, [roomDetails?._id]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (!roomDetails?.roomId) return;
+
+    socket.emit("joinRoom", roomDetails.roomId);
+
+    const handleReceive = (data) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          userName: data.userName ?? "Anonymous",
+          text: data.message,
+          type: "other",
+          avatar:
+            "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+        },
+      ]);
+    };
+
+    socket.on("receiveMessage", handleReceive);
+
+    // 🧹 cleanup
+    return () => {
+      socket.off("receiveMessage", handleReceive);
+    };
+  }, [roomDetails?.roomId]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
