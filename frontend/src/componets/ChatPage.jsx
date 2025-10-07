@@ -20,7 +20,7 @@ const ChatPage = () => {
 
   const sendMessage = () => {
     if (input.trim() === "") return;
-    console.log(input);
+    // console.log(input);
 
     try {
       axios.post(
@@ -57,7 +57,7 @@ const ChatPage = () => {
       try {
         const res = await axios.get(`${BASE_URL}/rooms/${id}`);
         setRoomDetails(res.data);
-        console.log("Room details:", res.data);
+        // console.log("Room details:", res.data);
       } catch (err) {
         console.error("Error fetching room details:", err);
       }
@@ -76,7 +76,7 @@ const ChatPage = () => {
           `${BASE_URL}/message/${roomDetails._id}?limit=20&before=${currDate}`,
           { withCredentials: true }
         );
-        console.log("Messages:", messagesFromDB.data);
+        // console.log("Messages:", messagesFromDB.data);
         setMessages(messagesFromDB.data);
       } catch (err) {
         console.error("Error fetching messages:", err);
@@ -135,7 +135,7 @@ const ChatPage = () => {
           </Link>
           <h2 className="text-2xl font-bold text-white">
             <Icon className="text-3xl text-blue-400 inline" />{" "}
-            {roomDetails.title}
+            {roomDetails.title || roomDetails.roomName}
           </h2>
         </div>
         <h3 className="text-sm text-white">Online: 13</h3>

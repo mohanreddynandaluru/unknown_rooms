@@ -31,9 +31,11 @@ const createRoom = async (req, res) => {
 
     const newRoom = new Room({ roomName, roomId, subtitle });
     await newRoom.save();
-    res
-      .status(201)
-      .json({ message: "Room created successfully", room: newRoom });
+    res.status(201).json({
+      message: "Room created successfully",
+      status: "success",
+      room: newRoom,
+    });
   } catch (err) {
     console.log(err.message);
     return res

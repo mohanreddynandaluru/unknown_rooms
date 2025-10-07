@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
     }
     user = new User({ userName });
     await user.save();
-    console.log(user);
+    // console.log(user);
 
     const token = jwt.sign(
       { id: user._id, userName: user.userName },

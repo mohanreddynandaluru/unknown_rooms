@@ -24,7 +24,7 @@ const UserName = () => {
         { userName },
         { withCredentials: true }
       );
-      console.log(user.data.userName);
+      // console.log(user.data.userName);
       dispatch(setUser({ userName: user.data.userName }));
       navigate("/");
     } catch (err) {
@@ -35,14 +35,14 @@ const UserName = () => {
   };
   useEffect(() => {
     if (user.userName) {
-      navigate(-2);
+      navigate(-1);
     }
   });
 
   return (
-    <div>
+    <div className="">
       <Footer font={"Asimovian"} />
-      <div className="flex justify-center items-center gap-4 h-[60vh]">
+      <div className="flex justify-center flex-col items-center md:flex-row gap-4 mt-[10rem]">
         <div className="flex flex-col gap-2">
           <input
             type="text"
@@ -53,11 +53,15 @@ const UserName = () => {
           />
         </div>
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 Delius text-xl"
+          className="bg-blue-500 w-1/3 md:w-fit text-white px-4 py-2 rounded hover:bg-blue-600 Delius text-xl"
           onClick={handleButton}
         >
           Save
         </button>
+      </div>
+      <div className="text-center mt-10">
+        *Account will be deleted after 24 hours of inactivity <br /> *Messages
+        will be deleted after 12 hours
       </div>
     </div>
   );
