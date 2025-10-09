@@ -31,6 +31,31 @@ const Home = () => {
     fetchRooms();
   }, []);
 
+  const handleDeleteAccount = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      try {
+        const response = await fetch("http://localhost:4000/user", {
+          method: "DELETE",
+          credentials: "include", // include cookies
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert(data.message || "Account deleted successfully.");
+          window.location.reload(); // reload to reset state
+        } else {
+          alert(data.message || "Failed to delete account.");
+        }
+      } catch (err) {
+        console.error("Error deleting account:", err);
+        alert("An error occurred while deleting the account.");
+      }
+    }
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center p-6">
       {init && (
@@ -118,6 +143,17 @@ const Home = () => {
             Join Room
           </button>
         </Link>
+      </div>
+      <div className="mt-4">
+        --------------------------------------------------------------------
+      </div>
+      <div>
+        <button
+          className="cursor-pointer mt-4 px-4 py-2 bg-red-700/35 text-white rounded-full hover:bg-red-500 transition w-[100%] sm:w-auto Delius"
+          onClick={handleDeleteAccount}
+        >
+          Delete Account
+        </button>
       </div>
 
       <Footer font={"Nabla"} />

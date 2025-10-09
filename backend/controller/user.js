@@ -60,5 +60,34 @@ const getUser = async (req, res) => {
       .json({ message: "Server error", error: err.message });
   }
 };
+const deleteUser = async (req, res) => {
+  try {
+    const user = req.user;
 
-module.exports = { createUser, getUser };
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(user.id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    // Clear authentication cookie (if any)
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({ message: "Successfully deleted account" });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = { createUser, getUser, deleteUser };
