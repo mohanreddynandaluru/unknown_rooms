@@ -5,6 +5,7 @@ import { loadSlim } from "@tsparticles/slim";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import iconMap from "../utils/roomsData.jsx";
 import { BASE_URL } from "../utils/constants.js";
+import axios from "axios";
 
 const Home = () => {
   const [init, setInit] = useState(false);
@@ -39,9 +40,8 @@ const Home = () => {
       )
     ) {
       try {
-        const response = await fetch("http://localhost:4000/user", {
-          method: "DELETE",
-          credentials: "include", // include cookies
+        const response = await axios.delete(`${BASE_URL}/user`, {
+          withCredentials: true,
         });
         const data = await response.json();
         if (response.ok) {
