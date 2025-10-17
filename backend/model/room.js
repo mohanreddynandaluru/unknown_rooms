@@ -21,6 +21,7 @@ const roomSchema = new schema({
   lastMessage: {
     type: Date,
     default: Date.now,
+    expires: 60 * 60 * 24,
   },
 });
 

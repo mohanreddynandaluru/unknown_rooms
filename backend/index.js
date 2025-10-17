@@ -33,6 +33,6 @@ app.use("/user", userRoute);
 app.use("/rooms", roomRoute);
 app.use("/message", messageRoute);
 
-server.listen(4000, () => {
+server.listen(process.env.PORT, () => {
   console.log("Server is running on port 4000");
 });

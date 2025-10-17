@@ -36,9 +36,9 @@ const getMessages = async (req, res) => {
       "https://tse2.mm.bing.net/th/id/OIP.sznKTawHmg0kF5VJPFpE5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3";
 
     const updatedMessages = messages.map((message) => {
-      const isCurrentUser = message.user._id?.toString() === req.user.id;
+      const isCurrentUser = message.user?._id?.toString() === req.user.id;
       return {
-        userName: isCurrentUser ? "You" : message.user.userName,
+        userName: isCurrentUser ? "You" : message.user?.userName,
         avatar: defaultAvatar,
         text: message.message,
         type: isCurrentUser ? "user" : "other",
