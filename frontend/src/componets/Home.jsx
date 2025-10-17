@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { loadSlim } from "@tsparticles/slim";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import iconMap from "../utils/roomsData.jsx";
+import { BASE_URL } from "../utils/constants.js";
 
 const Home = () => {
   const [init, setInit] = useState(false);
@@ -20,7 +21,7 @@ const Home = () => {
     // Fetch rooms from API
     const fetchRooms = async () => {
       try {
-        const res = await fetch("http://localhost:4000/rooms");
+        const res = await fetch(BASE_URL + "/rooms");
         const data = await res.json();
         setRooms(data.rooms); // assuming API returns { rooms: [...] }
       } catch (err) {
