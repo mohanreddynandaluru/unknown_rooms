@@ -29,6 +29,11 @@ function initSocket(server) {
     socket.on("disconnect", () => {
       //   console.log("❌ Client disconnected:", socket.id);
     });
+
+    socket.on("leaveRoom", (roomId) => {
+      socket.leave(roomId);
+      console.log(`❌ ${socket.id} left room ${roomId}`);
+    });
   });
 }
 

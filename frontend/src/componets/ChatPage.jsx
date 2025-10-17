@@ -115,6 +115,7 @@ const ChatPage = () => {
     // 🧹 cleanup
     return () => {
       socket.off("receiveMessage", handleReceive);
+      socket.emit("leaveRoom", id);
     };
   }, [roomDetails?.roomId]);
 
@@ -138,7 +139,7 @@ const ChatPage = () => {
             {roomDetails.title || roomDetails.roomName}
           </h2>
         </div>
-        <h3 className="text-sm text-white">Online: 13</h3>
+        <h3 className="text-sm text-white">RoomId: {id}</h3>
       </div>
 
       {/* Messages */}
