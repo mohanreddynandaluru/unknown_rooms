@@ -12,7 +12,7 @@ function initSocket(server) {
   });
 
   io.on("connection", (socket) => {
-    // console.log("✅ New client connected:", socket.id);
+    // console.log("New client connected:", socket.id);
 
     // Join a room
     socket.on("joinRoom", (roomId) => {
@@ -27,12 +27,12 @@ function initSocket(server) {
     });
 
     socket.on("disconnect", () => {
-      //   console.log("❌ Client disconnected:", socket.id);
+      //   console.log("Client disconnected:", socket.id);
     });
 
     socket.on("leaveRoom", (roomId) => {
       socket.leave(roomId);
-      console.log(`❌ ${socket.id} left room ${roomId}`);
+      // console.log(`${socket.id} left room ${roomId}`);
     });
   });
 }
